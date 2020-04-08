@@ -7,14 +7,26 @@
       <a href="index.html">Be</a>
     </div>
     <ul class="sidebar-menu">
+      @if(auth()->user()->role == 'admin')
+        <li class="">
+          <a class="nav-link" href="{{url('/fakultas')}}">
+            <i class="far fa-building"></i><span>Fakultas</span>
+          </a>
+        </li>
+        <li class="">
+          <a class="nav-link" href="{{url('/jurusan')}}">
+            <i class="fas fa-book-reader"></i><span>Jurusan</span>
+          </a>
+        </li>
+        <li class="">
+          <a class="nav-link" href="{{url('/ruangan')}}">
+            <i class="fab fa-houzz"></i><span>Ruangan</span>
+          </a>
+        </li>
+      @endif  
       <li class="">
-        <a class="nav-link" href="{{url('/fakultas')}}">
-          <i class="far fa-building"></i><span>Fakultas</span>
-        </a>
-      </li>
-      <li class="">
-        <a class="nav-link" href="{{url('/jurusan')}}">
-          <i class="fas fa-book-reader"></i><span>Jurusan</span>
+        <a class="nav-link" href="{{url('/barang')}}">
+          <i class="fas fa-pencil-ruler"></i><span>Barang</span>
         </a>
       </li>
     </ul>

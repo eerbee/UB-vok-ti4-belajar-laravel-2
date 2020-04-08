@@ -57,12 +57,12 @@
                 </tr>
                 @empty
                 <tr>
-                  <td colspan="3"><center>Data Tidak Ditemukan</center></td>
+                  <td colspan="4"><center>Data Tidak Ditemukan</center></td>
                 </tr>
                 @endforelse
               </tbody>
             </table>
-            {!! $jurusans->links() !!}
+            {!! $jurusans->links() !!}        
           </div>
           <div class="card-footer text-right">
             <nav class="d-inline-block">
@@ -74,7 +74,7 @@
   </div>
 </section>
 <!-- Modal ADD -->
-  <div class="modal fade" id="addData" tabindex="-1" role="dialog" aria-labelledby="addData" aria-hidden="true" >
+  <div class="modal fade" id="addData" tabindex="-1" role="dialog" aria-labelledby="addData" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content"> 
         <form action="{{ route('jurusan.store') }}" method="POST">
@@ -85,20 +85,18 @@
           <div class="modal-body">
             {{csrf_field()}}
             <div class="form-group">
-              <label for="inputNamaJurusan">
-                Nama Jurusan <i style="color: red;">*</i>
+              <label for="inputNamaJurusan" style="font-weight: bold;">
+                Nama Jurusan<i style="color: red;">*</i>
               </label>
-              <input name="tjurusan_nama" type="text" class="form-control" id="inputNamaJurusan" placeholder="Masukkan Nama Jurusan" required="">
-              <label for="inputNamaFakultas">
-                Nama Fakultas<i style="color: red;">*</i>
+              <input name="tjurusan_nama" type="text" class="form-control" id="inputNamaJurusan" placeholder="Masukkan Nama Jurusan" required="" style="font-weight: bold;">
+              <label for="inputNamaFakultas" style="margin-top: 10px;">
+                Cari Fakultas
               </label>
-              <select class="form-control" name="tjurusan_fakultas" required="">
-                @foreach( $fakultass as $fakultas)
-                  <option value="{{ $fakultas->tfakultas_id }}">
-                    {{ $fakultas->tfakultas_nama }}
-                  </option>
-                @endforeach
-              </select>
+              <input type="text" id="fakultas" placeholder="Pencarian Fakultas" class="form-control" autocomplete="off" required="">
+              <label for="inputNamaFakultas" style="margin-top: 10px; font-weight: bold;">
+                Pilihan Fakultas<i style="color: red;">*</i>
+              </label>
+              <div id="fakultas_list"></div>
             </div>
           </div>
           <div class="modal-footer">
@@ -109,11 +107,41 @@
       </div>
     </div>
   </div>
+  <script type="text/javascript">
+    $(document).ready(function () 
+    {
+      $('#fakultas').on('keyup',function() 
+      {
+          var query = $(this).val(); 
+          $.ajax({
+             
+            url:"{{ route('src_add_jurusan') }}",
+        
+            type:"GET",
+             
+            data:{'fakultas':query},
+             
+            success:function (data) 
+            {  
+              $('#fakultas_list').html(data);
+            }
+        })
+        // end of ajax call
+      });
+
+      $(document).on('click', 'option', function()
+      {
+        var value = $(this).text();
+        $('#fakultas').val(value);
+        $('#fakultas_list').html("");
+      });
+    });
+  </script>
 <!-- End of Modal Add -->  
 
 <!-- Modal Edit -->
   @foreach($jurusans as $jrsn)
-    <div class="modal fade" id="editData{{$jrsn->tjurusan_id}}" tabindex="-1" role="dialog" aria-labelledby="deleteData" aria-hidden="true" >
+    <div class="modal fade" id="editData{{$jrsn->tjurusan_id}}" role="dialog" aria-labelledby="deleteData" aria-hidden="true" >
       <div class="modal-dialog" role="document">
         <div class="modal-content"> 
           <form action="{{ route('jurusan.update', $jrsn->tjurusan_id) }}" method="post">
@@ -125,27 +153,50 @@
               @csrf 
               @method('PATCH')
               <div class="form-group">
-                <label>Nama Jurusan</label>
-                <input type="text" name="tjurusan_nama" class="form-control" value="{{ $jrsn->tjurusan_nama }}" required="">
-                <label for="inputFakultas">Nama Fakultas</label>
-                  <select class="form-control" name="tjurusan_fakultas" required="">
-                    @foreach( $fakultass as $fakultas )
-                      <option value="{{ $fakultas->tfakultas_id }}" {{ $fakultas->tfakultas_id == $jrsn->tjurusan_fakultas ? 'selected="selected"' : '' }}> 
-                        {{ $fakultas->tfakultas_nama }} 
-                      </option>
-                    @endforeach
-                  </select>
+                <label style="font-weight: bold;">Nama Jurusan<i style="color: red;">*</i></label>
+                <input type="text" name="tjurusan_nama" class="form-control" value="{{ $jrsn->tjurusan_nama }}" required="" style="font-weight: bold;">
+                <label for="FakultasLama" style="margin-top: 10px; font-weight: bold;">Fakultas Saat Ini</label>
+                <input type="text" class="form-control" value="{{ $jrsn->tfakultas_nama }}" disabled>
+                <label for="inputFakultasBaru" style="margin-top: 10px; font-weight: bold;">
+                  Pilihan Fakultas Baru<i style="color: red;">*</i>
+                </label>
+                <select class="itemName form-control" style="width:450px;" name="tjurusan_fakultas"></select>
               </div>
             </div>
-            <div class="modal-footer">\
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-              <button type="submit" class="btn btn-warning"><b>Save</b></button>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                Batal
+              </button>
+              <button type="submit" class="btn btn-warning">
+                <b>Save</b>
+              </button>
             </div>
           </form>
         </div>
       </div>
     </div>
   @endforeach
+  <script type="text/javascript">
+      $('.itemName').select2({
+        placeholder: 'Select Fakultas Baru',
+        ajax: {
+          url: '/src_edit_jurusan',
+          dataType: 'json',
+          delay: 250,
+          processResults: function (data) {
+            return {
+              results:  $.map(data, function (item) {
+                    return {
+                        text: item.tfakultas_nama,
+                        id: item.tfakultas_id
+                    }
+                })
+            };
+          },
+          cache: true
+        }
+      });
+  </script>
 <!-- End of Modal Edit--> 
 
 <!-- Modal DELETE -->
@@ -162,7 +213,7 @@
               <div class="form-group">
                 <h5>
                   <br>
-                  Hapus <b>{{$jrsn->tjurusan_nama}}</b> ? 
+                    Hapus <b>{{$jrsn->tjurusan_nama}} - {{ $jrsn->tfakultas_nama }}</b> ? 
                 </h5>
               </div>
             </div>
@@ -178,4 +229,4 @@
     </div>
   @endforeach
 <!-- End of Modal DELETE--> 
-@endsection()
+@stop

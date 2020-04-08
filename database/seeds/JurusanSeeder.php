@@ -13,6 +13,6 @@ class JurusanSeeder extends Seeder
      */
     public function run()
     {
-        Factory(App\Jurusan::class,18)->create();
+        Factory(App\Jurusan::class,17)->create();
     }
 }

@@ -1,0 +1,236 @@
+@extends('layouts.adminmain')
+
+@section('content')
+<section class="section">
+  
+  <div class="section-header">
+    <h1>Ruangan</h1>
+  </div>
+
+  <div class="section-body">
+    <div class="col-12 col-md-12 col-lg-12">
+        <div class="card">
+          <div class="card-header">
+            <form method="GET" class="form-inline" action="{{ route('ruangan.index')}}">
+              <div class="form-group">
+                <input style="width: 400px;" type="text" name="src" class="form-control" placeholder="Search" value="{{ request()->get('src') }}">
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary">
+                  <i class="fa fa-search"></i> &nbsp; Search
+                </button>
+              </div>
+            </form>
+            <a href="{{ route('ruangan.index') }}" class="pull-right">
+              <button type="button" class="btn btn-info">All Data</button>
+            </a>
+          </div>
+          <div class="card-header">
+            <button type="button" data-toggle="modal" data-target="#addData" class="btn btn-success">
+              <i class="fa fa-plus"></i> Tambah Ruangan
+            </button>
+          </div>
+          <div class="card-body">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th scope="col" width="10%"><center>#</center></th>
+                  <th scope="col">Nama Ruangan</th>
+                  <th scope="col">Nama Jurusan</th>
+                  <th scope="col"><center>Aksi</center></th>
+                </tr>
+              </thead>
+              <tbody>
+               @forelse($ruangans as $ruangan => $rngn)
+                <tr>
+                  <td align="center">{{ $ruangans->firstItem() + $ruangan }}</td>
+                  <td>{{ $rngn->truangan_nama }}</td>
+                  <td>{{ $rngn->tjurusan_nama }}</td>
+                  <td align="center">
+                    <button type="button" data-toggle="modal" data-target="#editData{{$rngn->truangan_id}}" class="btn btn-info btn-sm">
+                       EDIT
+                    </button>
+                    <button type="button" data-toggle="modal" data-target="#deleteData{{$rngn->truangan_id}}" class="btn btn-danger btn-sm">
+                       DELETE
+                    </button>
+                  </td>
+                </tr>
+                @empty
+                <tr>
+                  <td colspan="4"><center>Data Tidak Ditemukan</center></td>
+                </tr>
+                @endforelse
+              </tbody>
+            </table>
+            {!! $ruangans->links() !!}        
+          </div>
+          <div class="card-footer text-right">
+            <nav class="d-inline-block">
+              
+            </nav>
+          </div>
+        </div>
+      </div>  
+  </div>
+</section>
+<!-- Modal ADD -->
+  <div class="modal fade" id="addData" tabindex="-1" role="dialog" aria-labelledby="addData" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content"> 
+        <form action="{{ route('ruangan.store') }}" method="POST">
+          <div class="modal-header">
+            <h5 class="modal-title" id="DataLabel"><i class="far fa-plus-square"></i>&nbsp; Tambah Data Ruangan</h5>
+          </div>
+          <hr>
+          <div class="modal-body">
+            {{csrf_field()}}
+            <div class="form-group">
+              <label for="inputNamaJurusan" style="font-weight: bold;">
+                Nama Ruangan<i style="color: red;">*</i>
+              </label>
+              <input name="truangan_nama" type="text" class="form-control" id="inputNamaJurusan" placeholder="Masukkan Nama Ruangan" required="" style="font-weight: bold;">
+              <label for="inputNamaFakultas" style="margin-top: 10px;">
+                Cari Jurusan
+              </label>
+              <input type="text" id="jurusan" placeholder="Pencarian Jurusan" class="form-control" autocomplete="off">
+              <label for="inputNamaFakultas" style="margin-top: 10px; font-weight: bold;">
+                Pilihan Jurusan<i style="color: red;">*</i>
+              </label>
+              <div id="jurusan_list"></div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-primary">Tambahkan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    $(document).ready(function () 
+    {
+      $('#jurusan').on('keyup',function() 
+      {
+          var query = $(this).val(); 
+          $.ajax({
+             
+            url:"{{ route('src_add_ruangan') }}",
+        
+            type:"GET",
+             
+            data:{'jurusan':query},
+             
+            success:function (data) 
+            {  
+              $('#jurusan_list').html(data);
+            }
+        })
+        // end of ajax call
+      });
+
+      $(document).on('click', 'option', function()
+      {
+        var value = $(this).text();
+        $('#jurusan').val(value);
+        $('#jurusan_list').html("");
+      });
+    });
+  </script>
+<!-- End of Modal Add -->  
+
+<!-- Modal Edit -->
+  @foreach($ruangans as $rngn)
+    <div class="modal fade" id="editData{{$rngn->truangan_id}}" role="dialog" aria-labelledby="deleteData" aria-hidden="true" >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content"> 
+          <form action="{{ route('ruangan.update', $rngn->truangan_id) }}" method="post">
+            <div class="modal-header">
+              <h5 class="modal-title" id="DataLabel"><i class="far fa-edit"></i> &nbsp; Edit Data Ruangan</h5>
+            </div>
+            <hr>
+            <div class="modal-body">
+              @csrf 
+              @method('PATCH')
+              <div class="form-group">
+                <label style="font-weight: bold;">
+                  Nama Ruangan<i style="color: red;">*</i>
+                </label>
+                <input type="text" name="truangan_nama" class="form-control" value="{{ $rngn->truangan_nama }}" required="" style="font-weight: bold;">
+                <label for="FakultasLama" style="margin-top: 10px; font-weight: bold;">
+                  Jurusan Saat Ini
+                </label>
+                <input type="text" class="form-control" value="{{ $rngn->tjurusan_nama }}" disabled>
+                <label for="inputFakultasBaru" style="margin-top: 10px; font-weight: bold;">
+                  Pilihan Jurusan Baru<i style="color: red;">*</i>
+                </label>
+                <select class="itemName form-control" style="width:450px;" name="truangan_jurusan"></select>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                Batal
+              </button>
+              <button type="submit" class="btn btn-warning">
+                <b>Save</b>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  @endforeach
+  <script type="text/javascript">
+      $('.itemName').select2({
+        placeholder: 'Select Jurusan Baru',
+        ajax: {
+          url: '/src_edit_ruangan',
+          dataType: 'json',
+          delay: 250,
+          processResults: function (data) {
+            return {
+              results:  $.map(data, function (item) {
+                    return {
+                        text: item.tjurusan_nama,
+                        id: item.tjurusan_id
+                    }
+                })
+            };
+          },
+          cache: true
+        }
+      });
+  </script>
+<!-- End of Modal Edit--> 
+
+<!-- Modal DELETE -->
+  @foreach($ruangans as $rngn)
+    <div class="modal fade" id="deleteData{{$rngn->truangan_id}}" tabindex="-1" role="dialog" aria-labelledby="deleteData" aria-hidden="true" >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content"> 
+          <form action="{{route('ruangan.destroy', $rngn->truangan_id)}}" method="post">
+            <div class="modal-header">
+              <h5 class="modal-title" id="DataLabel"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> &nbsp; Konfirmasi Hapus</h5>
+            </div>
+            <hr>
+            <div class="modal-body">
+              <div class="form-group">
+                <h5>
+                  <br>
+                    Hapus <b>{{$rngn->truangan_nama}} - {{ $rngn->tjurusan_nama }}</b> ? 
+                </h5>
+              </div>
+            </div>
+            <div class="modal-footer">\
+              @csrf
+              @method('DELETE')
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-danger">Delete</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  @endforeach
+<!-- End of Modal DELETE--> 
+@stop

@@ -16,4 +16,9 @@ class Jurusan extends Model
     {
     	return $this->belongsTo('App\Fakultas','tjurusan_fakultas','tfakultas_id');
     }
+
+    public function table_ruangan()
+    { 
+      	return $this->hasMany('App\Jurusan','truangan_jurusan','tjurusan_id'); 
+	}
 }

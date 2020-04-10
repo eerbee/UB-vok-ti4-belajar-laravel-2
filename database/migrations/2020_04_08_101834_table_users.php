@@ -18,7 +18,7 @@ class TableUsers extends Migration
             $table->string('name', 50);
             $table->string('email', 50);
             $table->string('password', 100);
-            $table->string('role', 50)->default('admin'); // admin or staff
+            $table->string('role', 50); // admin or staff
             $table->timestamps();
         });
 

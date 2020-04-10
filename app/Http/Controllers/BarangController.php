@@ -7,6 +7,7 @@ use App\Jurusan;
 use App\Fakultas;
 use App\Ruangan;
 use App\Barang;
+use App\User;
 
 class BarangController extends Controller
 {
@@ -33,8 +34,9 @@ class BarangController extends Controller
         $barangs->appends($request->only('src'));
 
         $ruangans = Ruangan::all();
+        $user = User::all();
 
-        return view('barang.index', compact('barangs','ruangans'));
+        return view('barang.index', compact('barangs','ruangans','user'));
     }
 
     /**
@@ -60,8 +62,7 @@ class BarangController extends Controller
             'tbarang_total' => $request->tbarang_total, 
             'tbarang_broken' => $request->tbarang_broken, 
             'tbarang_ruangan' => $request->tbarang_ruangan, 
-            'tbarang_created_by' => $request->tbarang_created_by, 
-            'tbarang_updated_by' => $request->tbarang_updated_by
+            'tbarang_created_by' => $request->tbarang_created_by
         );
 
         Barang::create($form_data);

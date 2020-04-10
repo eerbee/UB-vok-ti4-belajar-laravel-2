@@ -22,7 +22,7 @@
               </div>
             </form>
             <a href="{{ route('barang.index') }}" class="pull-right">
-              <button type="button" class="btn btn-info">All Data</button>
+              <button type="button" class="btn btn-info">All Data Barang</button>
             </a>
           </div>
           @if(auth()->user()->role == 'admin')
@@ -43,7 +43,7 @@
                   <th scope="col">Ruangan</th>
                   <th scope="col" width="4%"><center>Created By</center></th>
                   <th scope="col" width="4%"><center>Updated By</center></th>
-                  <th scope="col"><center>Aksi</center></th>
+                  <th scope="col" width="17%"><center>Aksi</center></th>
                 </tr>
               </thead>
               <tbody>
@@ -54,8 +54,20 @@
                   <td align="center">{{ $brg->tbarang_total }}</td>
                   <td align="center">{{ $brg->tbarang_broken }}</td>
                   <td>{{ $brg->truangan_nama }}</td>
-                  <td>{{ $brg->tbarang_created_by }}</td>
-                  <td>{{ $brg->tbarang_updated_by }}</td>
+                  <td>
+                    @foreach($user as $u)
+                      @if($u->id == $brg->tbarang_created_by)
+                        {{ $u->name }}
+                      @endif
+                    @endforeach
+                  </td>
+                  <td>
+                    @foreach($user as $u)
+                      @if($u->id == $brg->tbarang_updated_by)
+                        {{ $u->name }}
+                      @endif
+                    @endforeach
+                  </td>
                   <td align="center">
                     <button type="button" data-toggle="modal" data-target="#editData{{$brg->tbarang_id}}" class="btn btn-info btn-sm">
                        EDIT
@@ -86,7 +98,7 @@
   </div>
 </section>
 <!-- Modal ADD -->
-  <div class="modal fade" id="addData" tabindex="-1" role="dialog" aria-labelledby="addData" aria-hidden="true">
+  <div class="modal fade" id="addData" role="dialog" aria-labelledby="addData" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content"> 
         <form action="{{ route('barang.store') }}" method="POST">
@@ -97,29 +109,27 @@
           <div class="modal-body">
             {{csrf_field()}}
             <div class="form-group">
-              <label for="inputNamaJurusan" style="font-weight: bold;">
+              <label for="inputNamaBarang" style="font-weight: bold;">
                 Nama Barang<i style="color: red;">*</i>
               </label>
               <input name="tbarang_nama" type="text" class="form-control" id="inputNamaJurusan" placeholder="Masukkan Nama Barang" required="" style="font-weight: bold;">
 
-              <label for="inputNamaJurusan" style="font-weight: bold;">
+              <label for="inputTotalBarang" style="font-weight: bold;">
                 Barang Total<i style="color: red;">*</i>
               </label>
               <input name="tbarang_total" type="text" class="form-control" id="inputNamaJurusan" placeholder="Masukkan Total Barang" required="" style="font-weight: bold;">
 
-              <label for="inputNamaJurusan" style="font-weight: bold;">
+              <label for="inputRusakBarang" style="font-weight: bold;">
                 Barang Rusak<i style="color: red;">*</i>
               </label>
               <input name="tbarang_broken" type="text" class="form-control" id="inputNamaJurusan" placeholder="Masukkan Jumlah Barang Rusak" required="" style="font-weight: bold;">
 
-              <label for="inputNamaFakultas" style="margin-top: 10px;">
-                Cari Ruangan
+              <input type="hidden" name="tbarang_created_by" value="{{auth()->user()->id}}" class="form-control">
+
+              <label for="inputNamaRuangan" style="margin-top: 10px; font-weight: bold;">
+                Pilih Ruangan<i style="color: red;">*</i>
               </label>
-              <input type="text" id="ruangan" placeholder="Pencarian Ruangan" class="form-control" autocomplete="off">
-              <label for="inputNamaFakultas" style="margin-top: 10px; font-weight: bold;">
-                Pilihan Ruangan<i style="color: red;">*</i>
-              </label>
-              <div id="ruangan_list"></div>
+              <select class="itemNameAdd form-control" style="width:450px;" name="tbarang_ruangan" required=""></select>
             </div>
           </div>
           <div class="modal-footer">
@@ -131,34 +141,25 @@
     </div>
   </div>
   <script type="text/javascript">
-    $(document).ready(function () 
-    {
-      $('#ruangan').on('keyup',function() 
-      {
-          var query = $(this).val(); 
-          $.ajax({
-             
-            url:"{{ route('src_add_barang') }}",
-        
-            type:"GET",
-             
-            data:{'ruangan':query},
-             
-            success:function (data) 
-            {  
-              $('#ruangan_list').html(data);
-            }
-        })
-        // end of ajax call
+      $('.itemNameAdd').select2({
+        placeholder: 'Select Ruangan Baru',
+        ajax: {
+          url: '/src_barang',
+          dataType: 'json',
+          delay: 250,
+          processResults: function (data) {
+            return {
+              results:  $.map(data, function (item) {
+                    return {
+                        text: item.truangan_nama,
+                        id: item.truangan_id
+                    }
+                })
+            };
+          },
+          cache: true
+        }
       });
-
-      $(document).on('click', 'option', function()
-      {
-        var value = $(this).text();
-        $('#ruangan').val(value);
-        $('#ruangan_list').html("");
-      });
-    });
   </script>
 <!-- End of Modal Add -->  
 
@@ -187,19 +188,22 @@
                 <input type="text" name="tbarang_total" class="form-control" value="{{ $brg->tbarang_total }}" required="" style="font-weight: bold;">
 
                 <label style="font-weight: bold;">
-                  Total Broken<i style="color: red;">*</i>
+                  Barang Rusak<i style="color: red;">*</i>
                 </label>
                 <input type="text" name="tbarang_broken" class="form-control" value="{{ $brg->tbarang_broken}}" required="" style="font-weight: bold;">
 
-                <label for="FakultasLama" style="margin-top: 10px; font-weight: bold;">
-                  Ruangan Saat Ini
+                <label for="inputRuanganBaru" style="margin-top: 10px; font-weight: bold;">
+                  Pilihan Ruangan <i style="color: red;">*</i>
                 </label>
-                <input type="text" class="form-control" value="{{ $brg->truangan_nama }}" disabled>
+                <select class="itemNameEdit form-control" style="width:450px;" name="tbarang_ruangan" required="">
+                  @foreach($ruangans as $ruangan)
+                    <option value="{{ $ruangan->truangan_id }}" {{ $ruangan->truangan_id == $brg->tbarang_ruangan ? 'selected="selected"' : '' }} > {{$ruangan->truangan_nama}}</option>
+                  @endforeach
+                </select>
 
-                <label for="inputFakultasBaru" style="margin-top: 10px; font-weight: bold;">
-                  Pilihan Ruangan Baru<i style="color: red;">*</i>
-                </label>
-                <select class="itemName form-control" style="width:450px;" name="tbarang_ruangan"></select>
+                <input type="hidden" name="tbarang_created_by" value="{{ $brg->tbarang_created_by }}" class="form-control">
+
+                <input type="hidden" name="tbarang_updated_by" value="{{auth()->user()->id}}" class="form-control">
               </div>
             </div>
             <div class="modal-footer">
@@ -216,10 +220,10 @@
     </div>
   @endforeach
   <script type="text/javascript">
-      $('.itemName').select2({
+      $('.itemNameEdit').select2({
         placeholder: 'Select Ruangan Baru',
         ajax: {
-          url: '/src_edit_barang',
+          url: '/src_barang',
           dataType: 'json',
           delay: 250,
           processResults: function (data) {

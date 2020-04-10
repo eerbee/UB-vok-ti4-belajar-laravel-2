@@ -22,7 +22,7 @@
               </div>
             </form>
             <a href="{{ route('fakultas.index') }}" class="pull-right">
-              <button type="button" class="btn btn-info">All Data</button>
+              <button type="button" class="btn btn-info">All Data Fakultas</button>
             </a>
           </div>
           <div class="card-header">

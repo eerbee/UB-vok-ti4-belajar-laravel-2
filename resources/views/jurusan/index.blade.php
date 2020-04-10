@@ -9,72 +9,72 @@
 
   <div class="section-body">
     <div class="col-12 col-md-12 col-lg-12">
-        <div class="card">
-          <div class="card-header">
-            <form method="GET" class="form-inline" action="{{ route('jurusan.index')}}">
-              <div class="form-group">
-                <input style="width: 400px;" type="text" name="src" class="form-control" placeholder="Search" value="{{ request()->get('src') }}">
-              </div>
-              <div class="form-group">
-                <button type="submit" class="btn btn-primary">
-                  <i class="fa fa-search"></i> &nbsp; Search
-                </button>
-              </div>
-            </form>
-            <a href="{{ route('jurusan.index') }}" class="pull-right">
-              <button type="button" class="btn btn-info">All Data</button>
-            </a>
-          </div>
-          <div class="card-header">
-            <button type="button" data-toggle="modal" data-target="#addData" class="btn btn-success">
-              <i class="fa fa-plus"></i> Tambah Jurusan
-            </button>
-          </div>
-          <div class="card-body">
-            <table class="table table-bordered">
-              <thead>
-                <tr>
-                  <th scope="col" width="10%"><center>#</center></th>
-                  <th scope="col">Nama Jurusan</th>
-                  <th scope="col">Nama Fakultas</th>
-                  <th scope="col"><center>Aksi</center></th>
-                </tr>
-              </thead>
-              <tbody>
-               @forelse($jurusans as $jurusan => $jrsn)
-                <tr>
-                  <td align="center">{{ $jurusans->firstItem() + $jurusan }}</td>
-                  <td>{{ $jrsn->tjurusan_nama }}</td>
-                  <td>{{ $jrsn->tfakultas_nama }}</td>
-                  <td align="center">
-                    <button type="button" data-toggle="modal" data-target="#editData{{$jrsn->tjurusan_id}}" class="btn btn-info btn-sm">
-                       EDIT
-                    </button>
-                    <button type="button" data-toggle="modal" data-target="#deleteData{{$jrsn->tjurusan_id}}" class="btn btn-danger btn-sm">
-                       DELETE
-                    </button>
-                  </td>
-                </tr>
-                @empty
-                <tr>
-                  <td colspan="4"><center>Data Tidak Ditemukan</center></td>
-                </tr>
-                @endforelse
-              </tbody>
-            </table>
-            {!! $jurusans->links() !!}        
-          </div>
-          <div class="card-footer text-right">
-            <nav class="d-inline-block">
-              
-            </nav>
-          </div>
+      <div class="card">
+        <div class="card-header">
+          <form method="GET" class="form-inline" action="{{ route('jurusan.index')}}">
+            <div class="form-group">
+              <input style="width: 400px;" type="text" name="src" class="form-control" placeholder="Search" value="{{ request()->get('src') }}">
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary">
+                <i class="fa fa-search"></i> &nbsp; Search
+              </button>
+            </div>
+          </form>
+          <a href="{{ route('jurusan.index') }}" class="pull-right">
+            <button type="button" class="btn btn-info">All Data Jurusan</button>
+          </a>
         </div>
-      </div>  
+        <div class="card-header">
+          <button type="button" data-toggle="modal" data-target="#addData" class="btn btn-success">
+            <i class="fa fa-plus"></i> Tambah Jurusan
+          </button>
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col" width="10%"><center>#</center></th>
+                <th scope="col">Nama Jurusan</th>
+                <th scope="col">Nama Fakultas</th>
+                <th scope="col"><center>Aksi</center></th>
+              </tr>
+            </thead>
+            <tbody>
+             @forelse($jurusans as $jurusan => $jrsn)
+              <tr>
+                <td align="center">{{ $jurusans->firstItem() + $jurusan }}</td>
+                <td>{{ $jrsn->tjurusan_nama }}</td>
+                <td>{{ $jrsn->tfakultas_nama }}</td>
+                <td align="center">
+                  <button type="button" data-toggle="modal" data-target="#editData{{$jrsn->tjurusan_id}}" class="btn btn-info btn-sm">
+                     EDIT
+                  </button>
+                  <button type="button" data-toggle="modal" data-target="#deleteData{{$jrsn->tjurusan_id}}" class="btn btn-danger btn-sm">
+                     DELETE
+                  </button>
+                </td>
+              </tr>
+              @empty
+              <tr>
+                <td colspan="4"><center>Data Tidak Ditemukan</center></td>
+              </tr>
+              @endforelse
+            </tbody>
+          </table>
+          {!! $jurusans->links() !!}        
+        </div>
+        <div class="card-footer text-right">
+          <nav class="d-inline-block">
+            
+          </nav>
+        </div>
+      </div>
+    </div>  
   </div>
 </section>
 <!-- Modal ADD -->
-  <div class="modal fade" id="addData" tabindex="-1" role="dialog" aria-labelledby="addData" aria-hidden="true">
+  <div class="modal fade" id="addData" role="dialog" aria-labelledby="addData" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content"> 
         <form action="{{ route('jurusan.store') }}" method="POST">
@@ -89,14 +89,11 @@
                 Nama Jurusan<i style="color: red;">*</i>
               </label>
               <input name="tjurusan_nama" type="text" class="form-control" id="inputNamaJurusan" placeholder="Masukkan Nama Jurusan" required="" style="font-weight: bold;">
-              <label for="inputNamaFakultas" style="margin-top: 10px;">
-                Cari Fakultas
-              </label>
-              <input type="text" id="fakultas" placeholder="Pencarian Fakultas" class="form-control" autocomplete="off" required="">
+
               <label for="inputNamaFakultas" style="margin-top: 10px; font-weight: bold;">
-                Pilihan Fakultas<i style="color: red;">*</i>
+                Pilih Fakultas<i style="color: red;">*</i>
               </label>
-              <div id="fakultas_list"></div>
+              <select class="itemNameAdd form-control" style="width:450px;" name="tjurusan_fakultas" required=""></select>
             </div>
           </div>
           <div class="modal-footer">
@@ -108,34 +105,25 @@
     </div>
   </div>
   <script type="text/javascript">
-    $(document).ready(function () 
-    {
-      $('#fakultas').on('keyup',function() 
-      {
-          var query = $(this).val(); 
-          $.ajax({
-             
-            url:"{{ route('src_add_jurusan') }}",
-        
-            type:"GET",
-             
-            data:{'fakultas':query},
-             
-            success:function (data) 
-            {  
-              $('#fakultas_list').html(data);
-            }
-        })
-        // end of ajax call
+      $('.itemNameAdd').select2({
+        placeholder: 'Select Fakultas',
+        ajax: {
+          url: '/src_jurusan',
+          dataType: 'json',
+          delay: 250,
+          processResults: function (data) {
+            return {
+              results:  $.map(data, function (item) {
+                    return {
+                        text: item.tfakultas_nama,
+                        id: item.tfakultas_id
+                    }
+                })
+            };
+          },
+          cache: true
+        }
       });
-
-      $(document).on('click', 'option', function()
-      {
-        var value = $(this).text();
-        $('#fakultas').val(value);
-        $('#fakultas_list').html("");
-      });
-    });
   </script>
 <!-- End of Modal Add -->  
 
@@ -155,12 +143,15 @@
               <div class="form-group">
                 <label style="font-weight: bold;">Nama Jurusan<i style="color: red;">*</i></label>
                 <input type="text" name="tjurusan_nama" class="form-control" value="{{ $jrsn->tjurusan_nama }}" required="" style="font-weight: bold;">
-                <label for="FakultasLama" style="margin-top: 10px; font-weight: bold;">Fakultas Saat Ini</label>
-                <input type="text" class="form-control" value="{{ $jrsn->tfakultas_nama }}" disabled>
+
                 <label for="inputFakultasBaru" style="margin-top: 10px; font-weight: bold;">
-                  Pilihan Fakultas Baru<i style="color: red;">*</i>
+                  Pilihan Fakultas <i style="color: red;">*</i>
                 </label>
-                <select class="itemName form-control" style="width:450px;" name="tjurusan_fakultas"></select>
+                <select class="itemNameEdit form-control" style="width:450px; " name="tjurusan_fakultas" >
+                  @foreach($fakultass as $fakultas)
+                    <option value="{{ $fakultas->tfakultas_id }}" {{ $fakultas->tfakultas_id == $jrsn->tjurusan_fakultas ? 'selected="selected"' : '' }} > {{$fakultas->tfakultas_nama}}</option>
+                  @endforeach
+                </select>
               </div>
             </div>
             <div class="modal-footer">
@@ -177,10 +168,10 @@
     </div>
   @endforeach
   <script type="text/javascript">
-      $('.itemName').select2({
+      $('.itemNameEdit').select2({
         placeholder: 'Select Fakultas Baru',
         ajax: {
-          url: '/src_edit_jurusan',
+          url: '/src_jurusan',
           dataType: 'json',
           delay: 250,
           processResults: function (data) {

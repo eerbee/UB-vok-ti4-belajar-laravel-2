@@ -22,7 +22,7 @@
               </div>
             </form>
             <a href="{{ route('ruangan.index') }}" class="pull-right">
-              <button type="button" class="btn btn-info">All Data</button>
+              <button type="button" class="btn btn-info">All Data Ruangan</button>
             </a>
           </div>
           <div class="card-header">
@@ -74,7 +74,7 @@
   </div>
 </section>
 <!-- Modal ADD -->
-  <div class="modal fade" id="addData" tabindex="-1" role="dialog" aria-labelledby="addData" aria-hidden="true">
+  <div class="modal fade" id="addData" role="dialog" aria-labelledby="addData" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content"> 
         <form action="{{ route('ruangan.store') }}" method="POST">
@@ -85,18 +85,15 @@
           <div class="modal-body">
             {{csrf_field()}}
             <div class="form-group">
-              <label for="inputNamaJurusan" style="font-weight: bold;">
+              <label for="inputNamaRuangan" style="font-weight: bold;">
                 Nama Ruangan<i style="color: red;">*</i>
               </label>
               <input name="truangan_nama" type="text" class="form-control" id="inputNamaJurusan" placeholder="Masukkan Nama Ruangan" required="" style="font-weight: bold;">
-              <label for="inputNamaFakultas" style="margin-top: 10px;">
-                Cari Jurusan
+
+              <label for="inputPilihanJurusan" style="margin-top: 10px; font-weight: bold;">
+                Pilih Jurusan<i style="color: red;">*</i>
               </label>
-              <input type="text" id="jurusan" placeholder="Pencarian Jurusan" class="form-control" autocomplete="off">
-              <label for="inputNamaFakultas" style="margin-top: 10px; font-weight: bold;">
-                Pilihan Jurusan<i style="color: red;">*</i>
-              </label>
-              <div id="jurusan_list"></div>
+              <select class="itemNameAdd form-control" style="width:450px;" name="truangan_jurusan" required=""></select>
             </div>
           </div>
           <div class="modal-footer">
@@ -108,34 +105,25 @@
     </div>
   </div>
   <script type="text/javascript">
-    $(document).ready(function () 
-    {
-      $('#jurusan').on('keyup',function() 
-      {
-          var query = $(this).val(); 
-          $.ajax({
-             
-            url:"{{ route('src_add_ruangan') }}",
-        
-            type:"GET",
-             
-            data:{'jurusan':query},
-             
-            success:function (data) 
-            {  
-              $('#jurusan_list').html(data);
-            }
-        })
-        // end of ajax call
+      $('.itemNameAdd').select2({
+        placeholder: 'Select Jurusan Baru',
+        ajax: {
+          url: '/src_ruangan',
+          dataType: 'json',
+          delay: 250,
+          processResults: function (data) {
+            return {
+              results:  $.map(data, function (item) {
+                    return {
+                        text: item.tjurusan_nama,
+                        id: item.tjurusan_id
+                    }
+                })
+            };
+          },
+          cache: true
+        }
       });
-
-      $(document).on('click', 'option', function()
-      {
-        var value = $(this).text();
-        $('#jurusan').val(value);
-        $('#jurusan_list').html("");
-      });
-    });
   </script>
 <!-- End of Modal Add -->  
 
@@ -157,14 +145,15 @@
                   Nama Ruangan<i style="color: red;">*</i>
                 </label>
                 <input type="text" name="truangan_nama" class="form-control" value="{{ $rngn->truangan_nama }}" required="" style="font-weight: bold;">
-                <label for="FakultasLama" style="margin-top: 10px; font-weight: bold;">
-                  Jurusan Saat Ini
+
+                <label for="inputJurusanBaru" style="margin-top: 10px; font-weight: bold;">
+                  Pilihan Jurusan <i style="color: red;">*</i>
                 </label>
-                <input type="text" class="form-control" value="{{ $rngn->tjurusan_nama }}" disabled>
-                <label for="inputFakultasBaru" style="margin-top: 10px; font-weight: bold;">
-                  Pilihan Jurusan Baru<i style="color: red;">*</i>
-                </label>
-                <select class="itemName form-control" style="width:450px;" name="truangan_jurusan"></select>
+                <select class="itemNameEdit form-control" style="width:450px;" name="truangan_jurusan" required="">
+                  @foreach($jurusans as $jurusan)
+                    <option value="{{ $jurusan->tjurusan_id }}" {{ $jurusan->tjurusan_id == $rngn->truangan_jurusan ? 'selected="selected"' : '' }} > {{$jurusan->tjurusan_nama}}</option>
+                  @endforeach
+                </select>
               </div>
             </div>
             <div class="modal-footer">
@@ -181,10 +170,10 @@
     </div>
   @endforeach
   <script type="text/javascript">
-      $('.itemName').select2({
+      $('.itemNameEdit').select2({
         placeholder: 'Select Jurusan Baru',
         ajax: {
-          url: '/src_edit_ruangan',
+          url: '/src_ruangan',
           dataType: 'json',
           delay: 250,
           processResults: function (data) {

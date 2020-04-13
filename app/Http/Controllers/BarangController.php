@@ -8,6 +8,8 @@ use App\Fakultas;
 use App\Ruangan;
 use App\Barang;
 use App\User;
+use App\Exports\BarangExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BarangController extends Controller
 {
@@ -126,5 +128,10 @@ class BarangController extends Controller
         $barangs = Barang::findOrFail($id);
         $barangs->delete();
         return redirect('/barang')->with('succes', 'Data is succesfully deleted.');
+    }
+
+    public function export_excel_barang(Request $request)
+    {
+        return Excel::download(new BarangExport, 'barang-'.date("Y-m-d").'.xlsx');
     }
 }

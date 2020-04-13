@@ -21,9 +21,16 @@
                 </button>
               </div>
             </form>
+            &nbsp;
             <a href="{{ route('ruangan.index') }}" class="pull-right">
               <button type="button" class="btn btn-info">All Data Ruangan</button>
             </a>
+            &nbsp;
+            <form action="/export_excel_ruangan" method="get">
+                <button type="submit" class="btn btn-success">
+                  <i class="fas fa-file-excel"></i> &nbsp; Export Excel
+                </button>
+            </form>
           </div>
           <div class="card-header">
             <button type="button" data-toggle="modal" data-target="#addData" class="btn btn-success">

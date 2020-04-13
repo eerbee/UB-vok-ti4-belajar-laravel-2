@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Jurusan;
 use App\Fakultas;
 use App\Ruangan;
+use App\Exports\RuanganExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class RuanganController extends Controller
 {
@@ -112,5 +114,10 @@ class RuanganController extends Controller
         $ruangans = Ruangan::findOrFail($id);
         $ruangans->delete();
         return redirect('/ruangan')->with('succes', 'Data is succesfully deleted.');
+    }
+
+    public function export_excel_ruangan(Request $request)
+    {
+        return Excel::download(new RuanganExport, 'ruangan-'.date("Y-m-d").'.xlsx');
     }
 }

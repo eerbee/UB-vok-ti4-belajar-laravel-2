@@ -21,9 +21,16 @@
               </button>
             </div>
           </form>
-          <a href="{{ route('jurusan.index') }}" class="pull-right">
+          &nbsp;
+          <a href="{{ url('/export_excel') }}" class="pull-right">
             <button type="button" class="btn btn-info">All Data Jurusan</button>
           </a>
+          &nbsp;
+          <form action="/export_excel_jurusan" method="get">
+              <button type="submit" class="btn btn-success">
+                <i class="fas fa-file-excel"></i> &nbsp; Export Excel
+              </button>
+          </form>
         </div>
         <div class="card-header">
           <button type="button" data-toggle="modal" data-target="#addData" class="btn btn-success">

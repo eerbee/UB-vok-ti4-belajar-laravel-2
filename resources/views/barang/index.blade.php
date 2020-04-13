@@ -21,9 +21,16 @@
                 </button>
               </div>
             </form>
+            &nbsp;
             <a href="{{ route('barang.index') }}" class="pull-right">
               <button type="button" class="btn btn-info">All Data Barang</button>
             </a>
+            &nbsp;
+            <form action="/export_excel_barang" method="get">
+                <button type="submit" class="btn btn-success">
+                  <i class="fas fa-file-excel"></i> &nbsp; Export Excel
+                </button>
+            </form>
           </div>
           @if(auth()->user()->role == 'admin')
             <div class="card-header">

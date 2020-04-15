@@ -28,17 +28,24 @@
             <i class="fab fa-houzz"></i><span>Ruangan</span>
           </a>
         </li>
+        <li class="">
+          <a class="nav-link" href="{{url('/barang')}}">
+            <i class="fas fa-pencil-ruler"></i><span>Barang</span>
+          </a>
+        </li>
       @endif  
-      <li class="">
+      @if(auth()->user()->role == 'staff')
+        <li class="">
           <a class="nav-link" href="{{url('/')}}">
             <i class="fas fa-chart-line"></i><span>Dashboard</span>
           </a>
-      </li>
-      <li class="">
-        <a class="nav-link" href="{{url('/barang')}}">
-          <i class="fas fa-pencil-ruler"></i><span>Barang</span>
-        </a>
-      </li>
+        </li>
+        <li class="">
+          <a class="nav-link" href="{{url('/barang')}}">
+            <i class="fas fa-pencil-ruler"></i><span>Barang</span>
+          </a>
+        </li>
+      @endif 
     </ul>
   </aside>
 </div>

@@ -30,6 +30,8 @@ Route::group(['middleware' => 'auth'], function()
 	
 	Route::group(['middleware' => 'checkRole:admin,staff'], function()
 	{
+		Route::resource('/','DashboardController')->middleware('auth');
+
 		Route::resource('barang','BarangController');
 			Route::get('src_barang', 'SearchController@src_barang')->name('src_barang');
 			Route::get('export_excel_barang', 'BarangController@export_excel_barang');

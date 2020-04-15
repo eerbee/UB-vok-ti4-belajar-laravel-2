@@ -9,6 +9,11 @@
     <ul class="sidebar-menu">
       @if(auth()->user()->role == 'admin')
         <li class="">
+          <a class="nav-link" href="{{url('/')}}">
+            <i class="fas fa-chart-line"></i><span>Dashboard</span>
+          </a>
+        </li>
+        <li class="">
           <a class="nav-link" href="{{url('/fakultas')}}">
             <i class="far fa-building"></i><span>Fakultas</span>
           </a>
@@ -24,6 +29,11 @@
           </a>
         </li>
       @endif  
+      <li class="">
+          <a class="nav-link" href="{{url('/')}}">
+            <i class="fas fa-chart-line"></i><span>Dashboard</span>
+          </a>
+      </li>
       <li class="">
         <a class="nav-link" href="{{url('/barang')}}">
           <i class="fas fa-pencil-ruler"></i><span>Barang</span>

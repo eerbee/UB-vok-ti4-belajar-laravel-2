@@ -19,6 +19,7 @@ class TableBarang extends Migration
             $table->bigInteger('tbarang_total');
             $table->bigInteger('tbarang_broken');
             $table->bigInteger('tbarang_ruangan')->unsigned()->nullable();
+            $table->string('tbarang_gambar')->nullable();
             $table->bigInteger('tbarang_created_by')->unsigned()->nullable()->default(1);
             $table->bigInteger('tbarang_updated_by')->unsigned()->nullable();
             $table->timestamps();

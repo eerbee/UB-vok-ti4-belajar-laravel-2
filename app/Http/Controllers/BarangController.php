@@ -26,9 +26,7 @@ class BarangController extends Controller
                 ->orWhere('tbarang_nama', 'LIKE', "%{$request->src}%")
                 ->orWhere('tbarang_total', 'LIKE', "%{$request->src}%")
                 ->orWhere('tbarang_broken', 'LIKE', "%{$request->src}%")
-                ->orWhere('truangan_nama', 'LIKE', "%{$request->src}%")
-                ->orWhere('tbarang_created_by', 'LIKE', "%{$request->src}%")
-                ->orWhere('tbarang_updated_by', 'LIKE', "%{$request->src}%");
+                ->orWhere('truangan_nama', 'LIKE', "%{$request->src}%");
         })  
         ->join('table_ruangan', 'table_ruangan.truangan_id', '=', 'table_barang.tbarang_ruangan')
         ->orderBy('tbarang_id', 'desc')->paginate(10);
@@ -59,11 +57,22 @@ class BarangController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'total_barang' => 'required|numeric',
+            'barang_broken' => 'required|numeric',
+            'gambar_barang' => 'required|image|max:2048'                  
+        ]);
+
+        $brg_image = $request->file('gambar_barang');
+        $new_name = rand() . '.' . $brg_image->getClientOriginalExtension();
+        $brg_image->move(public_path('images/barang'), $new_name);
+
         $form_data = array(
             'tbarang_nama' => $request->tbarang_nama, 
-            'tbarang_total' => $request->tbarang_total, 
-            'tbarang_broken' => $request->tbarang_broken, 
+            'tbarang_total' => $request->total_barang, 
+            'tbarang_broken' => $request->barang_broken, 
             'tbarang_ruangan' => $request->tbarang_ruangan, 
+            'tbarang_gambar' => $new_name,
             'tbarang_created_by' => $request->tbarang_created_by
         );
 
@@ -103,11 +112,33 @@ class BarangController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $selected = $request->hidden_image;
+        $brg_gambar = $request->file('gambar_barang');
+        if($brg_gambar != '')
+        {
+            $request->validate([
+                'total_barang' => 'required|numeric',
+                'barang_broken' => 'required|numeric',
+                'gambar_barang' => 'required|image|max:2048'
+            ]);
+
+            $selected = rand() . '.' . $brg_gambar->getClientOriginalExtension();
+            $brg_gambar->move(public_path('images/barang'), $selected);
+        }
+        else
+        {
+            $request->validate([
+                'total_barang' => 'required|numeric',
+                'barang_broken' => 'required|numeric'
+            ]);
+        }
+
         $form_data = array(
             'tbarang_nama' => $request->tbarang_nama, 
-            'tbarang_total' => $request->tbarang_total, 
-            'tbarang_broken' => $request->tbarang_broken, 
+            'tbarang_total' => $request->total_barang, 
+            'tbarang_broken' => $request->barang_broken, 
             'tbarang_ruangan' => $request->tbarang_ruangan, 
+            'tbarang_gambar' => $selected,
             'tbarang_created_by' => $request->tbarang_created_by, 
             'tbarang_updated_by' => $request->tbarang_updated_by
         );

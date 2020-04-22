@@ -54,7 +54,7 @@
                 </tr>
               </thead>
               <tbody>
-               @forelse($barangs as $barang => $brg)
+                @forelse($barangs as $barang => $brg)
                 <tr>
                   <td align="center">{{ $barangs->firstItem() + $barang  }}</td>
                   <td>{{ $brg->tbarang_nama }}</td>
@@ -76,14 +76,19 @@
                     @endforeach
                   </td>
                   <td align="center">
-                    <button type="button" data-toggle="modal" data-target="#editData{{$brg->tbarang_id}}" class="btn btn-info btn-sm">
-                       EDIT
-                    </button>
-                    @if(auth()->user()->role == 'admin')
-                      <button type="button" data-toggle="modal" data-target="#deleteData{{$brg->tbarang_id}}" class="btn btn-danger btn-sm">
-                         DELETE
+                    <div class="btn-group">
+                      <button type="button" data-toggle="modal" data-target="#detailData{{$brg->tbarang_id}}" class="btn btn-info btn-sm">
+                         <i class="fas fa-eye"></i>
                       </button>
-                    @endif
+                      <button type="button" data-toggle="modal" data-target="#editData{{$brg->tbarang_id}}" class="btn btn-warning btn-sm">
+                         <i class="fas fa-pen"></i>
+                      </button>
+                      @if(auth()->user()->role == 'admin')
+                        <button type="button" data-toggle="modal" data-target="#deleteData{{$brg->tbarang_id}}" class="btn btn-danger btn-sm">
+                           <i class="fas fa-trash"></i>
+                        </button>
+                      @endif
+                    </div>
                   </td>
                 </tr>
                 @empty
@@ -103,12 +108,19 @@
         </div>
       </div>  
   </div>
+  @if($errors->any())
+    <script>
+        $( document ).ready(function() {
+            $('#errorModal').modal('show');
+        });
+    </script>
+  @endif
 </section>
 <!-- Modal ADD -->
   <div class="modal fade" id="addData" role="dialog" aria-labelledby="addData" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content"> 
-        <form action="{{ route('barang.store') }}" method="POST">
+        <form action="{{ route('barang.store') }}" method="POST" enctype="multipart/form-data">
           <div class="modal-header">
             <h5 class="modal-title" id="DataLabel"><i class="far fa-plus-square"></i>&nbsp; Tambah Data Barang</h5>
           </div>
@@ -124,12 +136,12 @@
               <label for="inputTotalBarang" style="font-weight: bold;">
                 Barang Total<i style="color: red;">*</i>
               </label>
-              <input name="tbarang_total" type="text" class="form-control" id="inputNamaJurusan" placeholder="Masukkan Total Barang" required="" style="font-weight: bold;">
+              <input name="total_barang" type="text" class="form-control" id="inputNamaJurusan" placeholder="Masukkan Total Barang" required="" style="font-weight: bold;">
 
               <label for="inputRusakBarang" style="font-weight: bold;">
                 Barang Rusak<i style="color: red;">*</i>
               </label>
-              <input name="tbarang_broken" type="text" class="form-control" id="inputNamaJurusan" placeholder="Masukkan Jumlah Barang Rusak" required="" style="font-weight: bold;">
+              <input name="barang_broken" type="text" class="form-control" id="inputNamaJurusan" placeholder="Masukkan Jumlah Barang Rusak" required="" style="font-weight: bold;">
 
               <input type="hidden" name="tbarang_created_by" value="{{auth()->user()->id}}" class="form-control">
 
@@ -137,6 +149,9 @@
                 Pilih Ruangan<i style="color: red;">*</i>
               </label>
               <select class="itemNameAdd form-control" style="width:450px;" name="tbarang_ruangan" required=""></select>
+
+              <label style="margin-top: 10px;" for="inputGambarBarang">Gambar Barang <i style="color: red;">*</i></label>
+              <input type="file" class="form-control" name="gambar_barang" class="btn btn-primary btn-sm" value="Add" style="padding-bottom: 1cm;" required="">
             </div>
           </div>
           <div class="modal-footer">
@@ -175,7 +190,7 @@
     <div class="modal fade" id="editData{{$brg->tbarang_id}}" role="dialog" aria-labelledby="deleteData" aria-hidden="true" >
       <div class="modal-dialog" role="document">
         <div class="modal-content"> 
-          <form action="{{ route('barang.update', $brg->tbarang_id) }}" method="post">
+          <form action="{{ route('barang.update', $brg->tbarang_id) }}" method="post" enctype="multipart/form-data">
             <div class="modal-header">
               <h5 class="modal-title" id="DataLabel"><i class="far fa-edit"></i> &nbsp; Edit Data Barang</h5>
             </div>
@@ -192,12 +207,12 @@
                 <label style="font-weight: bold;">
                   Total Barang<i style="color: red;">*</i>
                 </label>
-                <input type="text" name="tbarang_total" class="form-control" value="{{ $brg->tbarang_total }}" required="" style="font-weight: bold;">
+                <input type="text" name="total_barang" class="form-control" value="{{ $brg->tbarang_total }}" required="" style="font-weight: bold;">
 
                 <label style="font-weight: bold;">
                   Barang Rusak<i style="color: red;">*</i>
                 </label>
-                <input type="text" name="tbarang_broken" class="form-control" value="{{ $brg->tbarang_broken}}" required="" style="font-weight: bold;">
+                <input type="text" name="barang_broken" class="form-control" value="{{ $brg->tbarang_broken}}" required="" style="font-weight: bold;">
 
                 <label for="inputRuanganBaru" style="margin-top: 10px; font-weight: bold;">
                   Pilihan Ruangan <i style="color: red;">*</i>
@@ -207,6 +222,11 @@
                     <option value="{{ $ruangan->truangan_id }}" {{ $ruangan->truangan_id == $brg->tbarang_ruangan ? 'selected="selected"' : '' }} > {{$ruangan->truangan_nama}}</option>
                   @endforeach
                 </select>
+
+                <label style="margin-top: 10px;" for="inputGambarBarang">Gambar Barang <i style="color: red;">*</i></label>
+                <input type="file" class="form-control" name="gambar_barang" class="btn btn-primary btn-sm" value="Add" style="padding-bottom: 1cm;">
+                <img src="{{ URL::to('/')}}/images/barang/{{ $brg->tbarang_gambar }}" class="img-thumbnail" width="150"/>
+                <input type="hidden" name="hidden_image" value="{{ $brg->tbarang_gambar }}">
 
                 <input type="hidden" name="tbarang_created_by" value="{{ $brg->tbarang_created_by }}" class="form-control">
 
@@ -279,4 +299,63 @@
     </div>
   @endforeach
 <!-- End of Modal DELETE--> 
+
+<!-- Modal DETAIL -->
+  @foreach($barangs as $brg)
+    <div class="modal fade" id="detailData{{$brg->tbarang_id}}" tabindex="-1" role="dialog" aria-labelledby="detailData" aria-hidden="true" >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content"> 
+          <div class="modal-header">
+            <h5 class="modal-title" id="DataLabel"><i class="fa fa-image" aria-hidden="true"></i> &nbsp; Detail Barang </h5>
+          </div>
+          <div class="modal-body">
+            <div class="form-group" align="center">
+                <img src="{{ URL::to('/') }}/images/barang/{{ $brg->tbarang_gambar }}" class="img-thumbnail" width="250" />
+                <br><br>
+                <h5>
+                  <b>{{$brg->tbarang_nama}} - {{ $brg->truangan_nama }}</b>
+                </h5>
+            </div>
+          </div>
+          <div class="modal-footer">\
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  @endforeach
+<!-- End of Modal DELETE-->
+
+<!-- Modal Error Add -->
+    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="deleteData" aria-hidden="true" >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content"> 
+            <div class="modal-header">
+              <h5 class="modal-title" id="DataLabel"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> &nbsp; Error </h5>
+            </div>
+            <hr>
+            <div class="modal-body">
+              <div class="alert alert-danger m-t-25">
+                <ul>
+                  @foreach($errors->all() as $error)
+                  <li>{{ $error }}</li>
+                  @endforeach
+                </ul>
+              </div>
+            </div>
+            <div class="modal-footer">\
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <!-- <button id="toAddModal" type="button" data-toggle="modal" class="btn btn-warning">Coba Lagi</button> -->
+            </div>
+        </div>
+      </div>
+      <!-- <script type="text/javascript">
+        $("#toAddModal").click(function() 
+        {
+          $("#errorAdd").modal('hide');
+          $("#addData").modal('show');
+        });
+      </script> -->
+    </div>
+<!-- End of Modal Error Add --> 
 @stop

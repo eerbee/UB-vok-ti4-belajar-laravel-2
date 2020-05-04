@@ -7,6 +7,8 @@ use App\Fakultas;
 use App\Jurusan;
 use App\Ruangan;
 use App\Barang;
+use App\Mail\DummyEmail;
+use Illuminate\Support\Facades\Mail;
 
 class DashboardController extends Controller
 {
@@ -17,10 +19,13 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        Mail::to("testing@example.com")->send(new DummyEmail());
+
         $fklts = Fakultas::count();
         $jrsn = Jurusan::count();
         $rngn = Ruangan::count();
         $brg = Barang::count();
+        
         return view('dashboard.index', compact('fklts','jrsn','rngn','brg'));
     }
 

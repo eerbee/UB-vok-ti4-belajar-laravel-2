@@ -31,6 +31,7 @@ Route::group(['middleware' => 'auth'], function()
 	Route::group(['middleware' => 'checkRole:admin,staff'], function()
 	{
 		Route::resource('/','DashboardController')->middleware('auth');
+		Route::get('kirimemail','DashboardController@index');
 
 		Route::resource('barang','BarangController');
 			Route::get('src_barang', 'SearchController@src_barang')->name('src_barang');

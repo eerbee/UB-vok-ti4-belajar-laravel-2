@@ -18,6 +18,7 @@ Route::group(['middleware' => 'auth'], function()
 	Route::group(['middleware' => 'checkRole:admin'], function()
 	{
 		Route::resource('fakultas','FakultasController');
+			Route::post('fakultas/import', 'FakultasController@import')->name('fakultas.import');
 
 		Route::resource('jurusan','JurusanController');
 			Route::get('src_jurusan', 'SearchController@src_jurusan')->name('src_jurusan');

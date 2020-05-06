@@ -7,6 +7,16 @@
     <h1>Ruangan</h1>
   </div>
 
+  @if ($message = Session::get('success'))
+    <div class="card">
+        <div class="card-body">
+              <div class="alert alert-success">
+                  <p>{{ $message }}</p>
+              </div>
+        </div>
+    </div>
+  @endif
+
   <div class="section-body">
     <div class="col-12 col-md-12 col-lg-12">
         <div class="card">

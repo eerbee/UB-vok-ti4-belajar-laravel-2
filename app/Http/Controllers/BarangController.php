@@ -78,7 +78,7 @@ class BarangController extends Controller
 
         Barang::create($form_data);
 
-        return redirect('/barang')->with('succes', 'Data is succesfully Added.');
+        return redirect('/barang')->with('success', 'Data is succesfully Added.');
     }
 
     /**
@@ -158,7 +158,7 @@ class BarangController extends Controller
     {
         $barangs = Barang::findOrFail($id);
         $barangs->delete();
-        return redirect('/barang')->with('succes', 'Data is succesfully deleted.');
+        return redirect('/barang')->with('success', 'Data is succesfully deleted.');
     }
 
     public function export_excel_barang(Request $request)

@@ -7,6 +7,16 @@
     <h1>Fakultas</h1>
   </div>
 
+  @if ($message = Session::get('success'))
+    <div class="card">
+        <div class="card-body">
+              <div class="alert alert-success">
+                  <p>{{ $message }}</p>
+              </div>
+        </div>
+    </div>
+  @endif
+
   <div class="section-body">
     <div class="col-12 col-md-12 col-lg-12">
         <div class="card">
@@ -21,6 +31,7 @@
                 </button>
               </div>
             </form>
+            &nbsp;
             <a href="{{ route('fakultas.index') }}" class="pull-right">
               <button type="button" class="btn btn-info">All Data Fakultas</button>
             </a>
@@ -28,6 +39,10 @@
           <div class="card-header">
             <button type="button" data-toggle="modal" data-target="#addData" class="btn btn-success">
               <i class="fa fa-plus"></i> Tambah Fakultas
+            </button>
+            &nbsp;
+            <button class="btn btn-outline-success" type="button" data-toggle="modal" data-target="#importModal">
+              <i class="fa fa-file-upload"></i> Import Excel
             </button>
           </div>
           <div class="card-body">
@@ -158,4 +173,33 @@
     </div>
   @endforeach
   <!-- End of Modal Edit--> 
+
+  <!-- Modal Import -->
+  <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form action="{{ route('fakultas.import') }}" method="POST" enctype="multipart/form-data">
+          @csrf
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+              <i class="fa fa-file-upload"></i>&nbsp; Fakultas Import Data
+            </h5>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Excel File</label>
+              <div class="custom-file">
+                <input type="file" class="form-control" id="customFile" name="file" class="btn btn-primary btn-sm" style="padding-bottom: 1cm;"  value="Add" required="">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Import</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+   <!-- End of Modal Import--> 
 @endsection()

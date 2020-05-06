@@ -58,7 +58,7 @@ class JurusanController extends Controller
 
         Jurusan::create($form_data);
 
-        return redirect('/jurusan')->with('succes', 'Data is succesfully Added.');
+        return redirect('/jurusan')->with('success', 'Data is succesfully Added.');
     }
 
     /**
@@ -112,7 +112,7 @@ class JurusanController extends Controller
     {
         $jurusans = Jurusan::findOrFail($id);
         $jurusans->delete();
-        return redirect('/jurusan')->with('succes', 'Data is succesfully deleted.');
+        return redirect('/jurusan')->with('success', 'Data is succesfully deleted.');
     }
 
     public function export_excel_jurusan(Request $request)

@@ -59,7 +59,7 @@ class RuanganController extends Controller
 
         Ruangan::create($form_data);
 
-        return redirect('/ruangan')->with('succes', 'Data is succesfully Added.');
+        return redirect('/ruangan')->with('success', 'Data is succesfully Added.');
     }
 
     /**
@@ -113,7 +113,7 @@ class RuanganController extends Controller
     {
         $ruangans = Ruangan::findOrFail($id);
         $ruangans->delete();
-        return redirect('/ruangan')->with('succes', 'Data is succesfully deleted.');
+        return redirect('/ruangan')->with('success', 'Data is succesfully deleted.');
     }
 
     public function export_excel_ruangan(Request $request)

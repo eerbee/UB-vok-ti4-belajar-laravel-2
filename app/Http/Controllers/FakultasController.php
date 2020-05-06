@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Fakultas;
+use App\Imports\FakultasImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class FakultasController extends Controller
 {
@@ -52,7 +55,7 @@ class FakultasController extends Controller
         );
 
         Fakultas::create($form_data);
-        return redirect('/fakultas')->with('succes', 'Data is succesfully Added.');
+        return redirect('/fakultas')->with('success', 'Data is succesfully Added.');
     }
 
     /**
@@ -109,6 +112,16 @@ class FakultasController extends Controller
     {
         $fakultass = Fakultas::findOrFail($id);
         $fakultass->delete();
-        return redirect('/fakultas')->with('succes', 'Data is succesfully deleted.');
+        return redirect('/fakultas')->with('success', 'Data is succesfully deleted.');
+    }
+
+    public function import(Request $request)
+    {
+        $file = $request->file('file');
+        $filename = rand().$file->getClientOriginalName();
+        $file->move('excel/fakultas',$filename);
+        Excel::import(new FakultasImport, public_path('/excel/fakultas/'.$filename));
+        return redirect()->route('fakultas.index')
+            ->with('success','Fakultas imported successfully.');
     }
 }

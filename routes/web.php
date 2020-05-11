@@ -31,7 +31,7 @@ Route::group(['middleware' => 'auth'], function()
 	
 	Route::group(['middleware' => 'checkRole:admin,staff'], function()
 	{
-		Route::resource('/','DashboardController')->middleware('auth');
+		Route::resource('dashboard','DashboardController')->middleware('auth');
 		Route::get('kirimemail','DashboardController@index');
 
 		Route::resource('barang','BarangController');
@@ -39,6 +39,9 @@ Route::group(['middleware' => 'auth'], function()
 			Route::get('export_excel_barang', 'BarangController@export_excel_barang');
 	});
 });
+
+//ROUTE TAMPILAN PUBLIC BARANG
+Route::resource('/','PublicBarangController');
 	
 Auth::routes();
 

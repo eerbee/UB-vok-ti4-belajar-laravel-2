@@ -21,7 +21,7 @@
 		        	<a href="{{ url('/') }}">Home</a>
 		      	</li>--}}
 		      	<li class="nav-item"><a href="{{ url('/') }}">Barang</a></li>
-		    	<li class="nav-item"><a href="{{ url('login') }}">Admin</a></li>
+		    	<li class="nav-item"><a href="{{ url('/dashboard') }}">Admin</a></li>
 		    </ul>
 		  </div>
 		</nav>

@@ -94,12 +94,6 @@
 							       <p>Fax. +6221 5731228</p>
 							    </div>
 							  </li>
-							  <li class="media">
-							    <span class="fa fa-envelope"></span>
-							    <div class="media-body">
-							     <p>support_treebo@libs.com</p>
-							    </div>
-							  </li>
 							</ul>
 						</div>
 					</div>

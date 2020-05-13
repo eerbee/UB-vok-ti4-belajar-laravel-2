@@ -6,8 +6,8 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12">
-					<div class="mu-page-header-area" style="background-image: url({{asset('assets_public/images/inventori.jpg')}});">
-						<h1 class="mu-page-header-title">Koleksi Buku</h1>
+					<div class="mu-page-header-area" style="background-image: url({{asset('assets_public/images/inventori6.jpg')}});">
+						<h1 style="color: #ffffff;" class="mu-page-header-title">Koleksi Barang</h1>
 					</div>
 				</div>
 			</div>
@@ -22,8 +22,8 @@
 				<div class="col-md-12">
 					<nav aria-label="breadcrumb" role="navigation">
 					  <ol class="breadcrumb mu-breadcrumb">
-					    {{--<li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>--}}
-					    <li class="breadcrumb-item active" aria-current="page">Koleksi Buku</li>
+					  	<li class="breadcrumb-item active" aria-current="page">simple inventory</li>
+					    <li class="breadcrumb-item"><a href="{{ url('/') }}">Barang</a></li>
 					  </ol>
 					</nav>
 				</div>
@@ -76,11 +76,13 @@
 														<span>
 															{{ $barang->truangan_nama }}
 														</span>
-														<br><br>
-														<ul style="margin-left: 20px; margin-bottom: 10px;">
+														<br>
+														<ul style="margin-left: 20px; margin-bottom: 10px; margin-top: 10px;">
 															<li> Total : {{$barang->tbarang_total}}</li>
 															<li> Rusak : {{$barang->tbarang_broken}} </li>
 														</ul>
+														<br>
+														<p style="float: right; font-family: sans-serif;">{{$barang->created_at}}</p>
 													</div>
 												</div>
 											</div>

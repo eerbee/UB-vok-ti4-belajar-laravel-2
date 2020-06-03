@@ -9,7 +9,7 @@
     <ul class="sidebar-menu">
       @if(auth()->user()->role == 'admin')
         <li class="">
-          <a class="nav-link" href="{{url('/')}}">
+          <a class="nav-link" href="{{url('/dashboard')}}">
             <i class="fas fa-chart-line"></i><span>Dashboard</span>
           </a>
         </li>
